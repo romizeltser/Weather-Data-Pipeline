@@ -26,7 +26,8 @@ def Cities():
        {"name":"Yavne" , "lat":31.8776 , "lon":34.7400 },
        {"name":"Metulla" , "lat":33.2843 , "lon":35.5801 }
    ]
-    
+
+   timestamp=datetime.now()
    for c in cities:
        url=UrlCity(c["lat"], c["lon"])
 
@@ -34,17 +35,23 @@ def Cities():
            response = requests.get(url, timeout=10)
            if response.status_code==200: 
                data = response.json()
-               timestamp=datetime.now()
                city=data["name"]
                temperature=data["main"]["temp"]
                humidity=data["main"]["humidity"]
                weather=data["weather"][0]["main"]
-
+               visibility= data["visibility"]
+               temp_min=data["main"]["temp_min"]
+               temp_max=data["main"]["temp_max"]
+               ##
                print(timestamp)
                print(city)
                print(temperature)
                print(humidity)
                print(weather)
+               print(visibility)
+               print(temp_min)
+               print(temp_max)
+               ##
 
            elif response.status_code==429: #too many requests
                continue
@@ -55,7 +62,7 @@ def Cities():
                
 
 Cities()
-schedule.every(7).minutes.do(Cities)
+schedule.every(6).minutes.do(Cities)
 start_time=datetime.now()
 finish_time=start_time+timedelta(hours=1)
 while datetime.now()<=finish_time:
