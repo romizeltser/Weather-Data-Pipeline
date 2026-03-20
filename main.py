@@ -21,7 +21,7 @@ if api_key:
 else:
     logger.error("could not load api key")
 
-init_db() # creates db if do not exists 
+init_db() # creates db if does not exists 
 
 def url_city(lat, lon):
     return f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
@@ -39,45 +39,55 @@ def cities():
     timestamp=datetime.now()
     for c in cities:
         url=url_city(c["lat"], c["lon"])
+        success= False
 
-        try:
-            response = requests.get(url, timeout=10)
-            if response.status_code==200: 
-                data = response.json()
-                city=data["name"]
-                temperature=data["main"]["temp"]
-                humidity=data["main"]["humidity"]
-                weather_condition=data["weather"][0]["main"]
-                visibility= data["visibility"]
-                temp_min=data["main"]["temp_min"]
-                temp_max=data["main"]["temp_max"]
-               ##
-                print(timestamp)
-                print(city)
-                print(temperature)
-                print(humidity)
-                print(weather_condition)
-                print(visibility)
-                print(temp_min)
-                print(temp_max)
-               ##
-                save_data(
-                    timestamp.strftime('%Y-%m-%d %H:%M:%S'), #converts to string 
-                    city,
-                    temperature,
-                    humidity,
-                    weather_condition,
-                    visibility,
-                    temp_min,
-                    temp_max
-               )
+        for attempt in range(3):
 
-            elif response.status_code==429: #too many requests
-                continue
+            try:
+                response = requests.get(url, timeout=10)
+                if response.status_code==200: 
+                    data = response.json()
+                    city=data["name"]
+                    temperature=data["main"]["temp"]
+                    humidity=data["main"]["humidity"]
+                    weather_condition=data["weather"][0]["main"]
+                    visibility= data["visibility"]
+                    temp_min=data["main"]["temp_min"]
+                    temp_max=data["main"]["temp_max"]
+                    save_data(
+                        timestamp.strftime('%Y-%m-%d %H:%M:%S'), #converts to string 
+                        city,
+                        temperature,
+                        humidity,
+                        weather_condition,
+                        visibility,
+                        temp_min,
+                        temp_max
+                    )
+                    success=True
+                    logger.info(f"saved data for {city}")
+                    break #no need to attempt again
 
-        except requests.exceptions.RequestException as e:
-            logger.error(f"error while fetching {c['name']}: {e}")
+                elif response.status_code==404:
+                    logger.error(f"The requested resource or endpoint doesn’t exist. (for {c['name']})")
+                    break
 
+                elif response.status_code==429: #too many requests
+                    retry_after = response.headers.get("Retry-After") #returns string
+                    if retry_after:
+                        wait_time = int(retry_after)
+                    else:
+                        wait_time = 5
+                    logger.warning(f"Rate limit hit for {c['name']}, waiting {wait_time} sec")    
+                    time.sleep(wait_time) #waits before continues
+                    # tries again
+                else:
+                    logger.error(f"Unexpected status code {response.status_code} for {c['name']}")
+                    break
+            except requests.exceptions.RequestException as e: # failed before reaching the server
+                logger.error(f"error while fetching {c['name']}: {e}")
+        if not success:
+            logger.error(f"All attempts failed for {c['name']}")
                
 
 cities()
