@@ -6,6 +6,7 @@ import schedule
 from datetime import datetime, timedelta
 import time
 from database import init_db, save_data
+from queries import avg_temp, highest_temperature, lowest_temperature, most_humid_time
 
 logging.basicConfig(
     level=logging.INFO,
@@ -30,9 +31,9 @@ def cities():
    
     cities = [
         {"name":"TelAviv" , "lat":32.09 , "lon":34.77 },
-        {"name":"RishonLezyon" , "lat":31.9730 , "lon":34.7925 },
+        {"name":"Jerusalem" , "lat":31.7683 , "lon":35.2137},
         {"name":"Eilat" , "lat":29.5577 , "lon":34.9519 },
-        {"name":"Yavne" , "lat":31.8776 , "lon":34.7400 },
+        {"name":"Netivot" , "lat":31.4222 , "lon":34.5886 },
         {"name":"Metulla" , "lat":33.2843 , "lon":35.5801 }
     ]
 
@@ -65,11 +66,10 @@ def cities():
                         temp_max
                     )
                     success=True
-                    logger.info(f"saved data for {city}")
                     break #no need to attempt again
 
                 elif response.status_code==404:
-                    logger.error(f"The requested resource or endpoint doesn’t exist. (for {c['name']})")
+                    logger.error(f"The requested resource or endpoint does not exist. (for {c['name']})")
                     break
 
                 elif response.status_code==429: #too many requests
