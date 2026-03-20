@@ -1,0 +1,11 @@
+{
+"cities": [
+        {"name":"TelAviv" , "lat":32.09 , "lon":34.77 },
+        {"name":"Jerusalem" , "lat":31.7683 , "lon":35.2137},
+        {"name":"Eilat" , "lat":29.5577 , "lon":34.9519 },
+        {"name":"Netivot" , "lat":31.4222 , "lon":34.5886 },
+        {"name":"Metulla" , "lat":33.2843 , "lon":35.5801 }
+    ],
+    "minutes": 6,
+    "hours": 1
+}

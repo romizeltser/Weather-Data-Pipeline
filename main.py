@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import time
 from database import init_db, save_data
 from queries import avg_temp, highest_temperature, lowest_temperature, most_humid_time
+import json
 
 logging.basicConfig(
     level=logging.INFO,
@@ -22,6 +23,12 @@ if api_key:
 else:
     logger.error("could not load api key")
 
+
+with open("config.json") as j:
+    config=json.load(j)
+    logger.info("Config loaded")
+
+
 init_db() # creates db if does not exists 
 
 def url_city(lat, lon):
@@ -29,13 +36,7 @@ def url_city(lat, lon):
 
 def cities():
    
-    cities = [
-        {"name":"TelAviv" , "lat":32.09 , "lon":34.77 },
-        {"name":"Jerusalem" , "lat":31.7683 , "lon":35.2137},
-        {"name":"Eilat" , "lat":29.5577 , "lon":34.9519 },
-        {"name":"Netivot" , "lat":31.4222 , "lon":34.5886 },
-        {"name":"Metulla" , "lat":33.2843 , "lon":35.5801 }
-    ]
+    cities = config["cities"]
 
     timestamp=datetime.now()
     for c in cities:
@@ -91,9 +92,9 @@ def cities():
                
 
 cities()
-schedule.every(6).minutes.do(cities)
+schedule.every(config["minutes"]).minutes.do(cities)
 start_time=datetime.now()
-finish_time=start_time+timedelta(hours=1)
+finish_time=start_time+timedelta(hours=config["hours"])
 while datetime.now()<=finish_time:
     schedule.run_pending()
     time.sleep(1)
