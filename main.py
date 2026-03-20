@@ -38,7 +38,7 @@ def Cities():
                city=data["name"]
                temperature=data["main"]["temp"]
                humidity=data["main"]["humidity"]
-               weather=data["weather"][0]["main"]
+               weather_condition=data["weather"][0]["main"]
                visibility= data["visibility"]
                temp_min=data["main"]["temp_min"]
                temp_max=data["main"]["temp_max"]
@@ -47,7 +47,7 @@ def Cities():
                print(city)
                print(temperature)
                print(humidity)
-               print(weather)
+               print(weather_condition)
                print(visibility)
                print(temp_min)
                print(temp_max)
