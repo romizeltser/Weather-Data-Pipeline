@@ -1,17 +1,25 @@
 import os
 import requests
+import logging
 from dotenv import load_dotenv
 import schedule
 from datetime import datetime, timedelta
 import time
 from database import init_db, save_data
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__) #__name__ is the name of the current file
+                         
 load_dotenv()
 api_key=os.getenv("weather")
 
 if api_key:
-    print("api key loaded successfully")
+    logger.info("api key loaded successfully")
 else:
-    print("could not load api key")
+    logger.error("could not load api key")
 
 init_db() # creates db if do not exists 
 
@@ -68,7 +76,7 @@ def cities():
                 continue
 
         except requests.exceptions.RequestException as e:
-            print(f"error while fetching {c['name']}: {e}")
+            logger.error(f"error while fetching {c['name']}: {e}")
 
                
 
