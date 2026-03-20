@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import schedule
 from datetime import datetime, timedelta
 import time
+from database import initDB, save_data
 load_dotenv()
 api_key=os.getenv("weather")
 
@@ -12,7 +13,7 @@ if api_key:
 else:
     print("could not load api key")
 
-
+initDB() # creates db if do not exists 
 
 def UrlCity(lat, lon):
     return f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
@@ -52,6 +53,16 @@ def Cities():
                 print(temp_min)
                 print(temp_max)
                ##
+                save_data(
+                    timestamp.strftime('%Y-%m-%d %H:%M:%S'), #converts to string 
+                    city,
+                    temperature,
+                    humidity,
+                    weather_condition,
+                    visibility,
+                    temp_min,
+                    temp_max
+               )
 
             elif response.status_code==429: #too many requests
                 continue
