@@ -1,6 +1,6 @@
 import sqlite3
 
-def initDB():
+def init_db():
     connection=sqlite3.connect("weather.db")
     cursor=connection.cursor()
 

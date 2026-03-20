@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import schedule
 from datetime import datetime, timedelta
 import time
-from database import initDB, save_data
+from database import init_db, save_data
 load_dotenv()
 api_key=os.getenv("weather")
 
@@ -13,12 +13,12 @@ if api_key:
 else:
     print("could not load api key")
 
-initDB() # creates db if do not exists 
+init_db() # creates db if do not exists 
 
-def UrlCity(lat, lon):
+def url_city(lat, lon):
     return f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
 
-def Cities():
+def cities():
    
     cities = [
         {"name":"TelAviv" , "lat":32.09 , "lon":34.77 },
@@ -30,7 +30,7 @@ def Cities():
 
     timestamp=datetime.now()
     for c in cities:
-        url=UrlCity(c["lat"], c["lon"])
+        url=url_city(c["lat"], c["lon"])
 
         try:
             response = requests.get(url, timeout=10)
@@ -72,8 +72,8 @@ def Cities():
 
                
 
-Cities()
-schedule.every(6).minutes.do(Cities)
+cities()
+schedule.every(6).minutes.do(cities)
 start_time=datetime.now()
 finish_time=start_time+timedelta(hours=1)
 while datetime.now()<=finish_time:
