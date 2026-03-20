@@ -1,3 +1,4 @@
+# for creating table and saving data
 import sqlite3
 
 def init_db():
