@@ -111,6 +111,7 @@ def cities():
             logger.error(f"All attempts failed for {c['name']}")
 
 
+schedule.clear()
 cities()
 schedule.every(config["minutes"]).minutes.do(cities)
 start_time = datetime.now()
