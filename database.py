@@ -5,6 +5,7 @@ logger = logging.getLogger(__name__)
 
 
 def init_db():
+    """creates the weather database and table if they do not exist"""
     try:
         with sqlite3.connect("weather.db") as connection:
             cursor = connection.cursor()
@@ -21,6 +22,7 @@ def init_db():
 
 
 def save_data(timestamp, city, temperature, humidity, weather_condition, visibility):
+    """saves weather data for a single city to the database"""
     try:
         with sqlite3.connect("weather.db") as connection:
             cursor = connection.cursor()

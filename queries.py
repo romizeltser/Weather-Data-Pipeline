@@ -9,6 +9,7 @@ def connect_db():
 
 
 def avg_temp(city_name):
+    """returns the average temperature for a given city over the collection period """
     try:
         with connect_db() as connection:
             cursor = connection.cursor()
@@ -31,6 +32,7 @@ def avg_temp(city_name):
 
 
 def highest_temperature():
+    """returns the city/cities with the highest recorded temperature"""
     try:
         with connect_db() as connection:
             cursor = connection.cursor()
@@ -54,6 +56,7 @@ def highest_temperature():
 
 
 def lowest_temperature():
+    """returns the city/cities with the lowest recorded temperature"""
     try:
         with connect_db() as connection:
             cursor = connection.cursor()
@@ -76,6 +79,7 @@ def lowest_temperature():
 
 
 def most_humid_time():
+    """returns the timestamp with the highest average humidity across all cities"""
     try:
         with connect_db() as connection:
             cursor = connection.cursor()

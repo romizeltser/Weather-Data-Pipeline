@@ -9,6 +9,8 @@ with open("config.json") as j:
 
 
 def is_valid_data(city, temperature, humidity, weather_condition, visibility):
+    """Validates incoming weather data against expected ranges and types.
+        returns True if all values are valid, False otherwise"""
     valid = True
     min_temp = config["validation"]["min_temperature"]
     max_temp = config["validation"]["max_temperature"]

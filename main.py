@@ -35,11 +35,12 @@ init_db()  # creates db if does not exists
 
 
 def url_city(lat, lon):
+    """builds the OpenWeatherMap API URL for a given lat and lon"""
     return f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
 
 
 def cities():
-
+    """fetches weather data for all configured cities and saves to database"""
     cities = config["cities"]
 
     timestamp = datetime.now()
