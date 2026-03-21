@@ -50,6 +50,12 @@ def cities():
                 response = requests.get(url, timeout=10)
                 if response.status_code==200: 
                     data = response.json()
+
+                    # check required fields exist
+                    if "main" not in data or "weather" not in data:
+                        logger.warning(f"Missing fields in response for {c['name']}")
+                        break
+
                     city=data["name"]
                     temperature=data["main"]["temp"]
                     humidity=data["main"]["humidity"]
@@ -69,6 +75,7 @@ def cities():
 
                     else:
                         logger.warning("Validation failed, continues to next city")
+                        
                     success=True
                     break #no need to attempt again
 
