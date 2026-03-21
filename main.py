@@ -8,6 +8,7 @@ import time
 from database import init_db, save_data
 from queries import avg_temp, highest_temperature, lowest_temperature, most_humid_time
 import json
+from validations import is_valid_data
 
 logging.basicConfig(
     level=logging.INFO,
@@ -54,18 +55,20 @@ def cities():
                     humidity=data["main"]["humidity"]
                     weather_condition=data["weather"][0]["main"]
                     visibility= data["visibility"]
-                    temp_min=data["main"]["temp_min"]
-                    temp_max=data["main"]["temp_max"]
-                    save_data(
-                        timestamp.strftime('%Y-%m-%d %H:%M:%S'), #converts to string 
-                        city,
-                        temperature,
-                        humidity,
-                        weather_condition,
-                        visibility,
-                        temp_min,
-                        temp_max
-                    )
+
+                    if is_valid_data(city, temperature, humidity, weather_condition, visibility):
+                        save_data(
+                            timestamp.strftime('%Y-%m-%d %H:%M:%S'), #converts to string 
+                            city,
+                            temperature,
+                            humidity,
+                            weather_condition,
+                            visibility
+                        )
+
+
+                    else:
+                        logger.warning("Validation failed, continues to next city")
                     success=True
                     break #no need to attempt again
 

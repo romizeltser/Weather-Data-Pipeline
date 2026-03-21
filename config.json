@@ -7,5 +7,9 @@
         {"name":"Metulla" , "lat":33.2843 , "lon":35.5801 }
     ],
     "minutes": 6,
-    "hours": 1
+    "hours": 1,
+    "validation":{
+        "min_temperature": -100,
+        "max_temperature": 65
+    }
 }

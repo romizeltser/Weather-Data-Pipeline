@@ -8,7 +8,7 @@ def init_db():
             cursor=connection.cursor()
 
             sql = """
-                CREATE TABLE IF NOT EXISTS weather (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp TEXT, city TEXT, temperature REAL, humidity INTEGER, weather_condition TEXT, visibility INTEGER, temp_min REAL, temp_max REAL)
+                CREATE TABLE IF NOT EXISTS weather (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp TEXT, city TEXT, temperature REAL, humidity INTEGER, weather_condition TEXT, visibility INTEGER)
             """
 
             cursor.execute(sql)
@@ -18,16 +18,16 @@ def init_db():
         logger.error(f"Failed to initialize database - {e}")
 
 
-def save_data(timestamp, city, temperature, humidity, weather_condition, visibility, temp_min, temp_max):
+def save_data(timestamp, city, temperature, humidity, weather_condition, visibility):
     try:
         with sqlite3.connect("weather.db") as connection:
             cursor=connection.cursor()
     
             sql = """
-                INSERT INTO weather (timestamp, city, temperature, humidity, weather_condition, visibility, temp_min, temp_max)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO weather (timestamp, city, temperature, humidity, weather_condition, visibility)
+                VALUES (?, ?, ?, ?, ?, ?)
             """
-            cursor.execute(sql, (timestamp, city, temperature, humidity, weather_condition, visibility, temp_min, temp_max))
+            cursor.execute(sql, (timestamp, city, temperature, humidity, weather_condition, visibility))
             connection.commit() #save changes
             logger.info(f"Data saved for {city}")
     except sqlite3.Error as e:
